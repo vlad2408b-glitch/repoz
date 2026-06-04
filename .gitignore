@@ -1,0 +1,18 @@
+# зависимости
+/node_modules
+
+# сборка next
+/.next
+/out
+
+# окружение (СЕКРЕТЫ — в репозиторий не коммитим!)
+.env
+.env.local
+.env*.local
+
+# vercel
+.vercel
+
+# прочее
+.DS_Store
+*.log
