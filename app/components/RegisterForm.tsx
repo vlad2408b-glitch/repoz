@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { 8393023758:AAG5vSFdMeG-hU-UEfSmw2x4uV5pSb6MnJo } from "@/lib/config";
+
+// и везде TELEGRAM_BOT_USERNAME → BOT_USERNAME
 
 type Props = { defaultName: string; email: string };
 
@@ -118,7 +119,7 @@ export default function RegisterForm({ defaultName, email }: Props) {
             К участникам
           </Link>
           <a
-            href={`https://t.me/${8393023758:AAG5vSFdMeG-hU-UEfSmw2x4uV5pSb6MnJo}`}
+            href="https://t.me/Exchunger_bot"
             target="_blank"
             rel="noopener noreferrer"
             className="btn"

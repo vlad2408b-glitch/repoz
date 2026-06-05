@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Countdown from "./components/Countdown";
-import { 8393023758:AAG5vSFdMeG-hU-UEfSmw2x4uV5pSb6MnJo } from "@/lib/config";
+
 
 export default function HomePage() {
   return (
@@ -25,7 +25,7 @@ export default function HomePage() {
             Список участников
           </Link>
           <a
-            href={`https://t.me/${8393023758:AAG5vSFdMeG-hU-UEfSmw2x4uV5pSb6MnJo}`}
+            href="https://t.me/Exchunger_bot"
             target="_blank"
             rel="noopener noreferrer"
             className="btn"
