@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Countdown from "./components/Countdown";
+import { 8393023758:AAG5vSFdMeG-hU-UEfSmw2x4uV5pSb6MnJo } from "@/lib/config";
 
 export default function HomePage() {
   return (
@@ -14,7 +15,7 @@ export default function HomePage() {
         <p className="lead">
           Marathon Skills проходит каждый год 15 июня в разных точках планеты.
           Дистанции на любой уровень: от 5 км до классических 42.2 км.
-          Зарегистрируйся онлайн и получи свой нагрудный номер.
+          Зарегистрируйся онлайн, узнай свой BMI и получи нагрудный номер.
         </p>
         <div className="hero-actions">
           <Link href="/register" className="btn btn-primary">
@@ -23,6 +24,15 @@ export default function HomePage() {
           <Link href="/participants" className="btn btn-outline">
             Список участников
           </Link>
+          <a
+            href={`https://t.me/${8393023758:AAG5vSFdMeG-hU-UEfSmw2x4uV5pSb6MnJo}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn"
+            style={{ background: "#229ED9", color: "#fff" }}
+          >
+            Написать боту
+          </a>
         </div>
 
         <div className="info-strip">
