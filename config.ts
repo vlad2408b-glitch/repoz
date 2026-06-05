@@ -1,3 +1,0 @@
-// Username телеграм-бота из BotFather, БЕЗ символа @.
-// Пример: если бот называется @MarathonSkillsBot, сюда пиши "MarathonSkillsBot".
-export const TELEGRAM_BOT_USERNAME = "ЗАМЕНИ_НА_USERNAME_БОТА";
