@@ -14,6 +14,7 @@ export default function Header() {
       <nav>
         <Link href="/participants">Участники</Link>
         <Link href="/register">Регистрация</Link>
+        <Link href="/chat">ИИ-чат</Link>
         {status === "authenticated" && session?.user ? (
           <div className="user">
             {session.user.image ? (

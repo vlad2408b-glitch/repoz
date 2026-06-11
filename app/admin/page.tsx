@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 
 type Runner = {
@@ -26,6 +26,10 @@ export default function AdminPage() {
   const [runners, setRunners] = useState<Runner[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  // Экспорт/импорт
+  const [importStatus, setImportStatus] = useState("");
+  const fileRef = useRef<HTMLInputElement>(null);
 
   // токен совпадает с ADMIN_TOKEN на сервере (по умолчанию "admin")
   const token = "admin";
@@ -66,6 +70,50 @@ export default function AdminPage() {
     });
     if (res.ok) setRunners((prev) => prev.filter((r) => r.id !== id));
     else alert("Не удалось удалить");
+  }
+
+  // Скачать CSV
+  function exportCsv() {
+    const link = document.createElement("a");
+    link.href = "/api/admin/export";
+    // Передаём токен через URL недоступно, поэтому делаем fetch и создаём blob
+    fetch("/api/admin/export", {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((res) => res.blob())
+      .then((blob) => {
+        const url = URL.createObjectURL(blob);
+        link.href = url;
+        link.download = `marathon_${new Date().toISOString().slice(0, 10)}.csv`;
+        link.click();
+        URL.revokeObjectURL(url);
+      });
+  }
+
+  // Импорт из CSV-файла
+  async function importCsv(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setImportStatus("Загрузка…");
+
+    const text = await file.text();
+    const res = await fetch("/api/admin/import", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "text/plain",
+      },
+      body: text,
+    });
+    const json = await res.json();
+    if (res.ok) {
+      setImportStatus(`✅ Импортировано: ${json.success}, пропущено: ${json.skipped}`);
+      loadRunners();
+    } else {
+      setImportStatus(`❌ Ошибка: ${json.error}`);
+    }
+    // Сбросить input чтобы можно было загрузить тот же файл повторно
+    if (fileRef.current) fileRef.current.value = "";
   }
 
   if (!authed) {
@@ -110,6 +158,29 @@ export default function AdminPage() {
     <main className="container page">
       <h2>Админ-панель</h2>
       <p className="sub">Все зарегистрированные участники. Всего: {runners.length}</p>
+
+      {/* Кнопки экспорт/импорт */}
+      <div style={{ display: "flex", gap: 10, marginBottom: 20, flexWrap: "wrap", alignItems: "center" }}>
+        <button className="btn btn-outline" onClick={exportCsv}>
+          ⬇ Скачать CSV
+        </button>
+        <label className="btn btn-outline" style={{ cursor: "pointer" }}>
+          ⬆ Импорт CSV
+          <input
+            ref={fileRef}
+            type="file"
+            accept=".csv"
+            style={{ display: "none" }}
+            onChange={importCsv}
+          />
+        </label>
+        {importStatus && (
+          <span style={{ fontSize: 13, color: "var(--muted)" }}>{importStatus}</span>
+        )}
+        <span style={{ fontSize: 12, color: "var(--muted)", marginLeft: "auto" }}>
+          CSV формат: name, surname, email, phone, age, gender, distance, city
+        </span>
+      </div>
 
       {loading ? (
         <div className="spinner">Загрузка…</div>
