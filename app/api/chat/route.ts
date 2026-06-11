@@ -28,26 +28,27 @@ const SYSTEM_PROMPT = `Ты — ИИ-помощник марафона Marathon 
 export async function POST(req: NextRequest) {
   const { messages } = await req.json();
 
-  const apiKey = process.env.ANTHROPIC_API_KEY;
+  const apiKey = process.env.GROQ_API_KEY;
   if (!apiKey) {
     return NextResponse.json(
-      { error: "ANTHROPIC_API_KEY не задан в переменных окружения" },
+      { error: "GROQ_API_KEY не задан в переменных окружения" },
       { status: 500 }
     );
   }
 
-  const response = await fetch("https://api.anthropic.com/v1/messages", {
+  const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "x-api-key": apiKey,
-      "anthropic-version": "2023-06-01",
+      "Authorization": `Bearer ${apiKey}`,
     },
     body: JSON.stringify({
-      model: "claude-sonnet-4-5",
+      model: "llama-3.3-70b-versatile",
       max_tokens: 512,
-      system: SYSTEM_PROMPT,
-      messages,
+      messages: [
+        { role: "system", content: SYSTEM_PROMPT },
+        ...messages,
+      ],
     }),
   });
 
@@ -57,6 +58,6 @@ export async function POST(req: NextRequest) {
   }
 
   const data = await response.json();
-  const text = data.content?.[0]?.text ?? "";
+  const text = data.choices?.[0]?.message?.content ?? "";
   return NextResponse.json({ text });
 }
